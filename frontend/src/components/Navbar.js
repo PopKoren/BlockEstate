@@ -19,8 +19,6 @@ const Navbar = () => {
             onClick={() => navigate(isLoggedIn ? '/menu' : '/')} 
             />
         </div>
-        <h2 class="white-text">BlockEstate</h2>
-
         <div className="nav-links">
           <button 
             onClick={() => navigate('/about')}

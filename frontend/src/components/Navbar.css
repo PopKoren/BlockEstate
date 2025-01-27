@@ -1,12 +1,11 @@
 .navbar {
-  background-color: rgb(52, 52, 250);
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   position: fixed;
   top: 0;
   left: 0;
   right: 0;
-  z-index: 1000;
-  height: 100px;
+  background: linear-gradient(to right, #2563eb, #1d4ed8);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  z-index: 50;
 }
   
   .nav-container {
@@ -43,7 +42,7 @@
   .nav-link {
     background: none;
     border: none;
-    color: white; /* Updated for visibility on blue background */
+    color: white; 
     font-size: 1rem;
     padding: 0.5rem 1rem;
     cursor: pointer;
