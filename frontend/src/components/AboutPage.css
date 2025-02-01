@@ -131,8 +131,8 @@
   top: 2rem;
   left: 2rem;
   padding: 0.75rem 1.5rem;
-  background-color: #805ad5;
-  color: white;
+  background-color: #ffffff;
+  color: rgb(52, 52, 250);
   border: none;
   border-radius: 8px;
   cursor: pointer;
@@ -144,7 +144,7 @@
 }
 
 .about-back-button:hover {
-  background-color: #6b46c1;
+  background-color: #ffffff;
   transform: translateY(-1px);
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }

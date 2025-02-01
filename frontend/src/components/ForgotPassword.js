@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './LoginForm.css';
 
@@ -12,14 +12,24 @@ const ForgotPassword = () => {
   const [newPassword, setNewPassword] = useState('');
   const [resetToken, setResetToken] = useState('');
 
+  useEffect(() => {
+    if (error) {
+      const timer = setTimeout(() => setError(''), 3000);
+      return () => clearTimeout(timer);
+    }
+  }, [error]);
+
+  const handleInputChange = (setter) => (e) => {
+    setter(e.target.value);
+    if (error) setError(''); 
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
       const response = await fetch('http://localhost:8000/api/forgot-password/', {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email }),
       });
 
@@ -41,9 +51,7 @@ const ForgotPassword = () => {
     try {
       const response = await fetch('http://localhost:8000/api/verify-reset-code/', {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email, code: verificationCode }),
       });
 
@@ -53,7 +61,7 @@ const ForgotPassword = () => {
         throw new Error(data.error || 'Invalid verification code');
       }
 
-      setResetToken(data.token); // Save the token
+      setResetToken(data.token);
       setSuccess('Code verified successfully');
       setStep(3);
     } catch (err) {
@@ -66,13 +74,11 @@ const ForgotPassword = () => {
     try {
       const response = await fetch('http://localhost:8000/api/reset-password/', {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           email,
-          token: resetToken, // Use the stored token, not the verification code
-          new_password: newPassword
+          token: resetToken,
+          new_password: newPassword,
         }),
       });
 
@@ -86,42 +92,27 @@ const ForgotPassword = () => {
       setTimeout(() => navigate('/login'), 3000);
     } catch (err) {
       setError(err.message);
-      if (err.message.includes('•')) {
-        // Format password validation errors
-        setError(err.message.split('\n').join('\n• '));
-      }
     }
   };
 
   return (
     <div className="login-container">
-      <button 
-        onClick={() => navigate('/login')}
-        className="back-button"
-      >
+      <button onClick={() => navigate('/login')} className="back-button">
         Back to Login
       </button>
 
       <div className="login-card">
         <h2 className="login-title">Reset Password</h2>
-        {error && (
-          <div className="error-message">
-            {error.split('\n').map((line, index) => (
-              <p key={index} style={{ margin: line.startsWith('•') ? '0 0 0 20px' : '0 0 10px 0' }}>
-                {line}
-              </p>
-            ))}
-          </div>
-        )}
+        {error && <div className="error-message">{error}</div>}
         {success && <div className="success-message">{success}</div>}
-        
+
         {step === 1 && (
           <form onSubmit={handleSubmit} className="login-form">
             <input
               type="email"
               placeholder="Enter your email"
               value={email}
-              onChange={(e) => setEmail(e.target.value)}
+              onChange={handleInputChange(setEmail)}
               className="login-input"
               required
             />
@@ -137,7 +128,7 @@ const ForgotPassword = () => {
               type="text"
               placeholder="Enter verification code"
               value={verificationCode}
-              onChange={(e) => setVerificationCode(e.target.value)}
+              onChange={handleInputChange(setVerificationCode)}
               className="login-input"
               required
             />
@@ -153,7 +144,7 @@ const ForgotPassword = () => {
               type="password"
               placeholder="Enter new password"
               value={newPassword}
-              onChange={(e) => setNewPassword(e.target.value)}
+              onChange={handleInputChange(setNewPassword)}
               className="login-input"
               required
             />

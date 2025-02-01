@@ -9,7 +9,7 @@ const AboutPage = () => {
   return (
     <div className="about-container">
       <button 
-        onClick={() => navigate(isLoggedIn ? '/dashboard' : '/')}
+        onClick={() => navigate(isLoggedIn ? '/menu' : '/')}
         className="about-back-button"
       >
         {isLoggedIn ? 'Back to Dashboard' : 'Back to Login'}

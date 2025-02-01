@@ -60,6 +60,12 @@ const RegisterForm = () => {
 
   return (
     <div className="login-container">
+       <button 
+        onClick={() => navigate('/menu')}
+        className="back-button"
+      >
+        Back to Menu
+      </button>
       <div className="login-card">
         <h2 className="login-title">Register</h2>
         {error && (
