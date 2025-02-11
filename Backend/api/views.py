@@ -10,7 +10,7 @@ from django.utils import timezone
 from rest_framework_simplejwt.tokens import RefreshToken
 from django.db import IntegrityError
 from django.core.cache import cache
-from .models import Subscription, Client, PasswordHistory, LoginAttempt
+from .models import Client, PasswordHistory, LoginAttempt
 from api.config import PASSWORD_CONFIG
 from django.core.mail import send_mail
 from django.conf import settings
@@ -151,58 +151,31 @@ def user_detail(request, pk):
 
     elif request.method == 'PUT':
         try:
-            subscription = request.data.get('subscription')
             new_username = request.data.get('username', user.username)
             new_email = request.data.get('email', user.email)
-            
-            # Check for duplicate email that isn't the current user's email
+
             if new_email != user.email and User.objects.filter(email=new_email).exists():
-                return Response({
-                    'error': 'A user with that email already exists'
-                }, status=status.HTTP_400_BAD_REQUEST)
-                
+                return Response({'error': 'A user with that email already exists'}, status=400)
+
             user.username = new_username
             user.email = new_email
-            
-            # Rest of subscription logic...
-            if subscription:
-                current_sub = Subscription.objects.filter(user=user, is_active=True).first()
-                if current_sub:
-                    current_sub.is_active = False
-                    current_sub.end_date = timezone.now()
-                    current_sub.save()
-
-                if subscription != "":
-                    Subscription.objects.create(
-                        user=user,
-                        plan=subscription.lower(),
-                        is_active=True
-                    )
-            
             user.save()
-            
-            active_sub = Subscription.objects.filter(user=user, is_active=True).first()
+
             return Response({
                 'id': user.pk,
                 'username': user.username,
                 'email': user.email,
-                'subscription': active_sub.plan if active_sub else None,
                 'is_staff': user.is_staff
             })
         except IntegrityError:
-            return Response({
-                'error': 'A user with that username already exists'
-            }, status=status.HTTP_400_BAD_REQUEST)
+            return Response({'error': 'A user with that username already exists'}, status=400)
         except Exception as e:
-            return Response({
-                'error': str(e)
-            }, status=status.HTTP_400_BAD_REQUEST)
-    
+            return Response({'error': str(e)}, status=400)
+        
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
 def user_dashboard(request):
     user = request.user
-    subscription = Subscription.objects.filter(user=user, is_active=True).first()
     
     return Response({
         'user': {
@@ -210,10 +183,7 @@ def user_dashboard(request):
             'email': user.email,
             'is_staff': user.is_staff
         },
-        'subscription': {
-            'plan': subscription.get_plan_display() if subscription else None, # type: ignore
-            'start_date': subscription.start_date if subscription else None
-        }
+       
     })
     
 @api_view(['PUT'])
@@ -313,60 +283,7 @@ def change_password(request):
         print("Full traceback:")
         traceback.print_exc()
         return Response({'error': str(e)}, status=400)
-    
-@api_view(['GET'])
-@permission_classes([IsAuthenticated])
-def user_subscriptions(request):
-    user = request.user
-    subscriptions = Subscription.objects.filter(user=user)
-    
-    active_sub = subscriptions.filter(is_active=True).first()
-    history = subscriptions.filter(is_active=False)
-    
-    return Response({
-        'active': {
-            'plan': active_sub.get_plan_display(), # type: ignore
-            'start_date': active_sub.start_date
-        } if active_sub else None,
-        'history': [{
-            'plan': sub.get_plan_display(),  # type: ignore
-            'start_date': sub.start_date,
-            'end_date': sub.end_date
-        } for sub in history]
-    })
 
-@api_view(['POST'])
-@permission_classes([IsAuthenticated])
-def purchase_plan(request):
-    user = request.user
-    plan = request.data.get('plan')
-    
-    if not plan:
-        return Response({'error': 'Plan type is required'}, status=400)
-        
-    try:
-        # Deactivate current subscription if exists
-        current_sub = Subscription.objects.filter(user=user, is_active=True).first()
-        if current_sub:
-            current_sub.is_active = False
-            current_sub.end_date = timezone.now()
-            current_sub.save()
-
-        # Create new subscription
-        new_sub = Subscription.objects.create(
-            user=user,
-            plan=plan,
-            is_active=True
-        )
-
-        return Response({
-            'message': f'Successfully subscribed to {new_sub.get_plan_display()}', # type: ignore
-            'plan': new_sub.get_plan_display(), # type: ignore
-            'start_date': new_sub.start_date
-        })
-    except Exception as e:
-        return Response({'error': str(e)}, status=400)
-    
 def generate_temp_password():
         return ''.join(random.choices(string.ascii_letters + string.digits, k=12))
 

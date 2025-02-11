@@ -5,22 +5,6 @@ import hashlib
 import os
 
 
-class Subscription(models.Model):
-    PLAN_CHOICES = [
-        ('basic', 'Basic Plan'),
-        ('pro', 'Pro Plan'),
-        ('enterprise', 'Enterprise Plan'),
-    ]
-    
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
-    plan = models.CharField(max_length=20, choices=PLAN_CHOICES)
-    start_date = models.DateTimeField(auto_now_add=True)
-    end_date = models.DateTimeField(null=True, blank=True)
-    is_active = models.BooleanField(default=True)
-
-    class Meta:
-        ordering = ['-start_date']
-
 class PasswordHistory(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     password_hash = models.CharField(max_length=255)

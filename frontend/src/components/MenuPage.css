@@ -1,3 +1,5 @@
+/* Updated MenuPage.css for real estate site */
+
 .menu-container {
   max-width: 1200px;
   margin: 100px auto 0;  
@@ -38,181 +40,54 @@
   font-weight: bold;
   cursor: pointer;
   transition: background-color 0.2s;
-  color: white;  /* Add this */
-}
-
-.clients-button {
-  background-color: #805ad5;  /* Purple */
   color: white;
-}
-
-.clients-button:hover {
-  background-color: #6b46c1;
 }
 
 .profile-button {
-  background-color: #48bb78;  /* Green */
-  color: white;
+  background-color: #48bb78;
 }
 
 .profile-button:hover {
   background-color: #38a169;
 }
 
-.admin-button {
-  background-color: #4299e1;  /* Blue */
-  color: white;
-}
-
-.admin-button:hover {
-  background-color: #3182ce;
-}
-
 .logout-button {
-  background-color: #f56565;  /* Red */
-  color: white;
+  background-color: #f56565;
 }
 
 .logout-button:hover {
   background-color: #e53e3e;
 }
 
-.plans-container {
+.real-estate-options {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
   gap: 2rem;
   margin-top: 2rem;
 }
 
-.plan-card {
+.option-card {
   background-color: rgba(255, 255, 255, 0.95);
   backdrop-filter: blur(10px);
   border-radius: 10px;
   padding: 2rem;
   box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
   transition: transform 0.2s;
+  cursor: pointer;
+  text-align: center;
 }
 
-.plan-card:hover {
+.option-card:hover {
   transform: translateY(-5px);
 }
 
-.plan-card h2 {
+.option-card h2 {
   margin: 0 0 1rem 0;
   color: #2d3748;
   font-size: 1.5rem;
 }
 
-.price {
-  font-size: 2rem;
-  font-weight: bold;
-  color: #4299e1;
-  margin-bottom: 1.5rem;
-}
-
-.features-list {
-  list-style: none;
-  padding: 0;
-  margin: 0 0 1.5rem 0;
-}
-
-.features-list li {
-  display: flex;
-  align-items: center;
-  margin-bottom: 0.5rem;
+.option-card p {
   color: #4a5568;
-}
-
-.checkmark {
-  color: #48bb78;
-  margin-right: 0.5rem;
-}
-
-.purchase-button {
-  width: 100%;
-  padding: 0.75rem;
-  background-color: #4299e1;
-  color: white;
-  border: none;
-  border-radius: 5px;
-  font-weight: bold;
-  cursor: pointer;
-  transition: background-color 0.2s;
-}
-
-.purchase-button:hover {
-  background-color: #3182ce;
-}
-
-.purchase-button.current-plan {
-  background-color: #718096;
-  cursor: not-allowed;
-}
-
-.purchase-button:disabled {
-  opacity: 0.7;
-  cursor: not-allowed;
-}
-
-.loading-spinner {
-  text-align: center;
-  padding: 2rem;
-  font-size: 1.2rem;
-  color: #4a5568;
-}
-
-.success-message {
-  background-color: #c6f6d5;
-  color: #2f855a;
-  padding: 1rem;
-  margin-bottom: 1rem;
-  border-radius: 0.5rem;
-  text-align: center;
-}
-
-.error-message {
-  background-color: #fed7d7;
-  color: #c53030;
-  padding: 1rem;
-  margin-bottom: 1rem;
-  border-radius: 0.5rem;
-  text-align: center;
-}
-
-.current-plan-banner {
-  background-color: #ebf8ff;
-  color: #2b6cb0;
-  padding: 1rem;
-  margin-bottom: 1rem;
-  border-radius: 0.5rem;
-  text-align: center;
-  font-weight: bold;
-}
-
-@media (max-width: 768px) {
-  .header {
-    flex-direction: column;
-    text-align: center;
-    gap: 1rem;
-  }
-
-  .plans-container {
-    grid-template-columns: 1fr;
-  }
-}
-
-.header-buttons .clients-button {
-  background-color: #805ad5;
-}
-
-.header-buttons .profile-button {
-  background-color: #48bb78;
-}
-
-.header-buttons .admin-button {
-  background-color: #4299e1;
-}
-
-.header-buttons .logout-button {
-  background-color: #f56565;
+  font-size: 1rem;
 }
