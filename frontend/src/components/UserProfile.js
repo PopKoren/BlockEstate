@@ -19,10 +19,6 @@ const UserProfile = () => {
   });
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
-  const [subscriptions, setSubscriptions] = useState({
-    active: null,
-    history: []
-  });
 
   useEffect(() => {
     fetch('http://localhost:8000/api/user/', {
@@ -39,23 +35,6 @@ const UserProfile = () => {
         email: data.email
       }));
     });
-
-    // Fetch subscriptions
-    const fetchSubscriptions = async () => {
-      try {
-        const response = await fetch('http://localhost:8000/api/user/subscriptions/', {
-          headers: {
-            'Authorization': `Bearer ${localStorage.getItem('access')}`
-          }
-        });
-        const data = await response.json();
-        setSubscriptions(data);
-      } catch (err) {
-        console.error('Failed to fetch subscriptions:', err);
-      }
-    };
-
-    fetchSubscriptions();
   }, []);
 
   useEffect(() => {
@@ -166,17 +145,16 @@ const UserProfile = () => {
       </div>
 
       <div className="profile-card">
-      {error && (
-        <div className="error-message">
-          {error.split('\n').map((line, index) => (
-            <p key={index} style={{ margin: line.startsWith('•') ? '0 0 0 20px' : '0 0 10px 0' }}>
-              {line}
-            </p>
-          ))}
-        </div>
-      )}
-      {success && <div className="success-message">{success}</div>}
-      
+        {error && (
+          <div className="error-message">
+            {error.split('\n').map((line, index) => (
+              <p key={index} style={{ margin: line.startsWith('•') ? '0 0 0 20px' : '0 0 10px 0' }}>
+                {line}
+              </p>
+            ))}
+          </div>
+        )}
+        {success && <div className="success-message">{success}</div>}
 
         {!isEditing && !isChangingPassword ? (
           <>
@@ -203,35 +181,6 @@ const UserProfile = () => {
                   Change Password
                 </button>
               </div>
-            </div>
-
-            <div className="subscription-section">
-              <h3>Current Plan</h3>
-              {subscriptions.active ? (
-                <div className="active-plan">
-                  <p className="plan-name">{subscriptions.active.plan}</p>
-                  <p className="plan-date">Since: {new Date(subscriptions.active.start_date).toLocaleDateString()}</p>
-                </div>
-              ) : (
-                <p>No active subscription</p>
-              )}
-
-              <h3>Subscription History</h3>
-              {subscriptions.history.length > 0 ? (
-                <div className="subscription-history">
-                  {subscriptions.history.map((sub, index) => (
-                    <div key={index} className="history-item">
-                      <p className="plan-name">{sub.plan}</p>
-                      <p className="plan-date">
-                        {new Date(sub.start_date).toLocaleDateString()} - 
-                        {sub.end_date ? new Date(sub.end_date).toLocaleDateString() : 'Present'}
-                      </p>
-                    </div>
-                  ))}
-                </div>
-              ) : (
-                <p>No subscription history</p>
-              )}
             </div>
           </>
         ) : isEditing ? (
@@ -349,7 +298,6 @@ const UserProfile = () => {
         )}
       </div>
     </div>
-    
   );
 };
 

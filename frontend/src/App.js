@@ -8,6 +8,8 @@ import AdminDashboard from './components/AdminDashboard';
 import UserProfile from './components/UserProfile';
 import ForgotPassword from './components/ForgotPassword';
 import AboutPage from './components/AboutPage';
+import RealEstateIntegration from './components/RealEstateIntegration';
+import PropertyListingsPage from './components/PropertyListingsPage';
 
 
 const ProtectedRoute = ({ children }) => {
@@ -29,6 +31,10 @@ function App() {
             <Route path="/login" element={<LoginForm />} />
             <Route path="/register" element={<RegisterForm />} />
             <Route path="/menu" element={<ProtectedRoute><MenuPage /></ProtectedRoute>} />
+            
+            <Route path="/sell" element={ <ProtectedRoute> <RealEstateIntegration /> </ProtectedRoute>} />
+            <Route path="/buy" element={<ProtectedRoute><PropertyListingsPage /></ProtectedRoute>} /> 
+
             <Route path="/admin" element={<ProtectedRoute><AdminDashboard /></ProtectedRoute>} />
             <Route path="/profile" element={<ProtectedRoute><UserProfile /></ProtectedRoute>} />
             <Route path="/forgot-password" element={<ForgotPassword />} />

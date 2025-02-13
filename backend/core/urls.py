@@ -11,8 +11,6 @@ urlpatterns = [
     path('user/', views.user_info, name='user-info'),
     path('user/update/', views.user_update, name='user-update'),
     path('user/change-password/', views.change_password, name='change-password'),
-    path('user/subscriptions/', views.user_subscriptions, name='user-subscriptions'),
-    path('purchase-plan/', views.purchase_plan, name='purchase-plan'),  # Make sure this exists
     path('admin/', admin.site.urls),
     path('api/', include('api.urls')), 
 ]
